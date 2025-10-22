@@ -1,0 +1,78 @@
+openapi: 3.0.0
+info:
+  title: US Predict Dashboard - Minimal API
+  version: 0.1.0
+paths:
+  /api/v1/prices/{ticker}:
+    get:
+      summary: Get historical prices for ticker
+      parameters:
+        - name: ticker
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: days
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 90
+      responses:
+        "200":
+          description: Historical price series (CSV/JSON)
+        "404":
+          description: Ticker not found
+
+  /api/v1/predict/{ticker}:
+    post:
+      summary: Get prediction for ticker
+      parameters:
+        - name: ticker
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                model:
+                  type: string
+                  enum: [sma, arima, prophet]
+                days:
+                  type: integer
+                  default: 3
+                include_after_hours:
+                  type: boolean
+                  default: false
+      responses:
+        "200":
+          description: Prediction result JSON
+        "400":
+          description: Bad request
+
+  /api/v1/admin/retrain:
+    post:
+      summary: Trigger manual retrain (admin)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ticker:
+                  type: string
+                model:
+                  type: string
+      responses:
+        "202":
+          description: Retrain scheduled
+        "403":
+          description: Forbidden
+
+components: {}
