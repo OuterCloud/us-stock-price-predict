@@ -1,50 +1,45 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+# 美股股价预测项目治理宪法
 
-## Core Principles
+## 核心治理原则
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### 一、依赖最小化
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+1. 仅允许使用：`yfinance`（仅用于数据获取，若不可用则跳过）、`pandas`、`numpy`
+2. 禁止使用：Prophet、scikit-learn、statsmodels、PyTorch、FastAPI、数据库、Docker
+3. Web 层可用 `streamlit`，但核心逻辑不得依赖 streamlit
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### 二、代码规范
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+1. 严格遵循 PEP 8
+2. 所有函数/类必须有类型注解（启用 mypy --strict）
+3. 所有公共函数必须有 Google 风格 docstring
+4. 禁止全局变量、禁止模块顶层副作用代码
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### 三、可测性（最高优先级）
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+1. 每个函数必须是纯函数或显式依赖注入
+2. 数据获取、模型预测、结果格式化必须分离
+3. 所有函数必须可通过 pytest 单独测试（无需网络/文件系统 mock 优先）
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+### 四、架构清晰
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+1. 模块划分：`data.py`（数据）、`model.py`（预测逻辑）、`app.py`（UI）
+2. 单文件 ≤ 250 行
+3. 配置通过函数参数传递，不使用配置文件
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+### 五、合规与交付
 
-## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
+1. 所有界面显示：“本预测不构成投资建议。”
+2. 支持 `streamlit run app.py` 启动
+3. 核心逻辑可脱离 Streamlit 独立运行（如 `python -m model.test_predict`）
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+## 治理机制
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+1. 本宪法优先于所有其他开发规范和标准。
+2. 所有功能实现、代码评审和架构决策必须严格遵循上述原则。
+3. 若有复杂性违反，需在项目计划中明确记录并论证。
+4. 宪法变更需根据语义化版本规则进行版本号递增（重大变更为 MAJOR，新原则或扩展为 MINOR，表述修正为 PATCH），并附带迁移方案和模板同步说明。
+5. 所有合并请求必须包含宪法合规性检查清单。
+6. 自动化工具（lint、类型检查）强制执行代码规范原则，人工评审需重点核查依赖最小化和架构清晰性。
+
+**版本**：1.0.0 | **首次制定**：2025-10-22 | **最后修订**：2025-10-22
